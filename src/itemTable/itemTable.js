@@ -1,41 +1,71 @@
 import React, { Component } from 'react';
 import { Table } from 'reactstrap';
+import { Environment } from '../config';
 import './itemTable.scss';
 
 class ItemTable extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      error: null,
+      isLoaded: false,
+      items: []
+    };
+  }
+
+  componentDidMount() {
+    fetch(Environment.API_URL + "/item/1", Environment.HTTP_OPTIONS)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          this.setState({
+            isLoaded: true,
+            items: result
+          });
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
+  }
+
   render() {
-    return (
-      <Table striped bordered condensed hover responsive>
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Handle</th>
+    const { error, isLoaded, items } = this.state;
+    if (error) {
+      return <div>Error: {error.message}</div>;
+    } else if (!isLoaded) {
+      return <div>Loading...</div>;
+    } else {
+      const itemTableView = items.map((item, index) =>
+        <tr key={item.item_id}>
+          <th scope="row">{index}</th>
+          <th>{item.item_id}</th>
+          <td>{item.name}</td>
+          <td>{item.value}</td>
         </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Larry</td>
-          <td>the Bird</td>
-          <td>@twitter</td>
-        </tr>
-      </tbody>
-    </Table>
-    );
+      );
+      return (
+        <div>
+          <Table striped bordered hover responsive>
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {itemTableView}
+          </tbody>
+        </Table>
+      </div>
+      );
+    }
   }
 }
 
