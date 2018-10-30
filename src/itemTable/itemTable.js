@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Table, Button, Input } from 'reactstrap';
 import { Environment } from '../config';
 import './itemTable.scss';
+import Item from '../item/item.js';
 
 class ItemTable extends Component {
   constructor(props) {
@@ -86,12 +87,7 @@ class ItemTable extends Component {
       return <div>Loading...</div>;
     } else {
       const itemTableView = items.map((item, index) =>
-        <tr key={item.itemId}>
-          <th scope="row">{index + 1}</th>
-          <th>{item.itemId}</th>
-          <td>{item.name}</td>
-          <td>{item.value}</td>
-        </tr>
+        <Item item={item} index={index} key={item.itemId}/>
       );
       return (
         <div>
@@ -102,6 +98,8 @@ class ItemTable extends Component {
                 <th scope="col">ID</th>
                 <th scope="col">Name</th>
                 <th scope="col">Value</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
