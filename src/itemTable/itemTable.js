@@ -90,7 +90,7 @@ class ItemTable extends Component {
         <Item item={item} index={index} key={item.itemId}/>
       );
       return (
-        <div>
+        <div id="item-table">
           <Table striped bordered hover responsive>
             <thead>
               <tr>
