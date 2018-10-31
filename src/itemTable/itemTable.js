@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Button, Input } from 'reactstrap';
+import { Table, Button, Form, FormGroup, Label, Input, Row, Col } from 'reactstrap';
 import { Environment } from '../config';
 import './itemTable.scss';
 import Item from '../item/item.js';
@@ -99,18 +99,33 @@ class ItemTable extends Component {
                 <th scope="col">Name</th>
                 <th scope="col">Value</th>
                 <th scope="col"></th>
-                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
               {itemTableView}
             </tbody>
           </Table>
-          <form onSubmit={this.handleSubmit}>
-            <Input placeholder="Name" name="newItemName" value={this.state.newItemName} onChange={this.handleChange}/>
-            <Input placeholder="Value" name="newItemValue" value={this.state.newItemValue} onChange={this.handleChange}/>
-            <Button type="submit" color="primary">Submit</Button>
-          </form>
+          <Form onSubmit={this.handleSubmit}>
+            <Row>
+              <Col sm={6}>
+              <FormGroup>
+                <Label for="newItemName">Name</Label>
+                  <Input type="text" name="newItemName" id="newItemName" placeholder="Enter an item name" value={this.state.newItemName} onChange={this.handleChange}/>
+              </FormGroup>
+              </Col>
+              <Col sm={6}>
+              <FormGroup >
+                <Label for="newItemValue">Value</Label>
+                <Input type="text" name="newItemValue" id="newItemValue" placeholder="Enter a value" value={this.state.newItemValue} onChange={this.handleChange} />
+              </FormGroup>
+              </Col>
+              <Col sm={2}>
+              <FormGroup>
+                <Button type="submit" color="primary">Submit</Button>
+              </FormGroup>
+              </Col>
+            </Row>
+          </Form>
         </div>
       );
     }

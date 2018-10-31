@@ -10,8 +10,8 @@ class Item extends Component {
         <th>{this.props.item.itemId}</th>
         <td>{this.props.item.name}</td>
         <td>{this.props.item.value}</td>
-        <td><Button type="button" color="primary" value={this.props.item.itemId}>Edit</Button></td>
-        <td><Button type="button" color="danger" value={this.props.item.itemId}>Delete</Button></td>
+        <td><Button type="button" color="primary" value={this.props.item.itemId}>Edit</Button>
+        <Button type="button" color="danger" value={this.props.item.itemId}>Delete</Button></td>
       </tr>
     );
   }
