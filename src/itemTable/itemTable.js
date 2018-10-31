@@ -17,6 +17,7 @@ class ItemTable extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
   }
 
   handleChange(event) {
@@ -54,8 +55,6 @@ class ItemTable extends Component {
     );
   }
 
-
-
   componentDidMount() {
     fetch(Environment.API_URL + "/items", {
       method: 'GET',
@@ -79,6 +78,30 @@ class ItemTable extends Component {
     );
   }
 
+  
+  deleteItem(event) {
+    event.preventDefault();
+    const itemId = event.target.value;
+    this.setState({
+      items: this.state.items.filter(e => e.itemId !== itemId)
+    });
+    fetch(Environment.API_URL + "/items/" + itemId, {
+      method: 'DELETE',
+      headers: Environment.HTTP_OPTIONS.headers
+    })
+    .then(res => res.json())
+    .then(
+      (result) => {
+        console.log('DELETE response', result);
+      },
+      (error) => {
+        this.setState({
+          error
+        });
+      }
+    );
+  }
+
   render() {
     const { error, isLoaded, items } = this.state;
     if (error) {
@@ -87,7 +110,7 @@ class ItemTable extends Component {
       return <div>Loading...</div>;
     } else {
       const itemTableView = items.map((item, index) =>
-        <Item item={item} index={index} key={item.itemId}/>
+        <Item item={item} index={index} key={item.itemId} onDelete={this.deleteItem}/>
       );
       return (
         <div id="item-table">
