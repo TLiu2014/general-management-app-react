@@ -66,7 +66,7 @@ class ItemTable extends Component {
         console.log('GET all items response', result);
         this.setState({
           isLoaded: true,
-          items: result
+          items: result.sort((a, b) => a.itemId < b.itemId)
         });
       },
       (error) => {
@@ -78,7 +78,6 @@ class ItemTable extends Component {
     );
   }
 
-  
   deleteItem(event) {
     event.preventDefault();
     const itemId = event.target.value;
@@ -92,7 +91,38 @@ class ItemTable extends Component {
     .then(res => res.json())
     .then(
       (result) => {
-        console.log('DELETE response', result);
+        // console.log('DELETE response', result);
+      },
+      (error) => {
+        this.setState({
+          error
+        });
+      }
+    );
+  }
+
+  updateItem(event, updatedName, updatedValue) {
+    event.preventDefault();
+    const itemId = event.target.value;
+    this.setState({
+      items: [...this.state.items.filter(e => e.itemId !== itemId), {
+        itemId: itemId,
+        name: updatedName,
+        value: updatedValue
+      }].sort((a, b) => (a.itemId < b.itemId ? -1: 1))
+    });
+    fetch(Environment.API_URL + "/items/" + itemId, {
+      method: 'PUT',
+      headers: Environment.HTTP_OPTIONS.headers,
+      body: JSON.stringify({
+        name: updatedName,
+        value: updatedValue,
+      })
+    })
+    .then(res => res.json())
+    .then(
+      (result) => {
+        console.log('PUT response', result);
       },
       (error) => {
         this.setState({
@@ -110,7 +140,7 @@ class ItemTable extends Component {
       return <div>Loading...</div>;
     } else {
       const itemTableView = items.map((item, index) =>
-        <Item item={item} index={index} key={item.itemId} onDelete={this.deleteItem}/>
+        <Item item={item} index={index} key={item.itemId} onDelete={this.deleteItem} onEdit={this.updateItem.bind(this)}/>
       );
       return (
         <div id="item-table">
